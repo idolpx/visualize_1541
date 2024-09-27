@@ -115,9 +115,24 @@ function renderImage(source_url)
 	}
 
 	console.log("Rendering disk image!");
-	var discImage = document.createElement('img');
-	discImage.src = canvas.toDataURL("image/png");
-	discImage.width  = 640;
-	discImage.height = 640;
-	document.body.appendChild(discImage);
+//	var discImage = document.createElement('img');
+//	discImage.src = canvas.toDataURL("image/png");
+//	discImage.width  = 640;
+//	discImage.height = 640;
+//	document.body.appendChild(discImage);
+
+        canvas.toBlob((blob) => {
+            const discImage = document.createElement("img");
+            const url = URL.createObjectURL(blob);
+
+            discImage.onload = () => {
+              // no longer need to read the blob so it's revoked
+              URL.revokeObjectURL(url);
+            };
+
+            discImage.src = url;
+            discImage.width = 640;
+            discImage.height = 640;
+            document.body.appendChild(discImage);
+        });
 }
